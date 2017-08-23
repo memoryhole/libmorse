@@ -3,13 +3,15 @@
 
 AC_PREREQ([2.69])
 AC_INIT([morse], [1.0])
+
+CFLAGS=${CFLAGS="-O3 -Wall -Wextra -Werror"} 
+
 AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE
 LT_INIT
 
 AC_CONFIG_SRCDIR([src/morse.h])
 AC_CONFIG_HEADERS([config.h])
-
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CC_STDC
