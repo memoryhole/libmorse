@@ -5,6 +5,8 @@
 
 morse_state morse_init_parser(morse_parser *parser) {
     memset(parser, 0, sizeof(morse_parser));
+
+    return MORSE_OK;
 }
 
 morse_state morse_init(morse_parser *parser);
