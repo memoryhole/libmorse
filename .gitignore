@@ -1,5 +1,5 @@
 /Makefile
-/Makefile.in
+Makefile.in
 /aclocal.m4
 /autom4te.cache/
 /config.*
@@ -16,3 +16,4 @@
 .libs/
 *.l[ao]
 *~
+compile
