@@ -1,4 +1,5 @@
 #include "data.h"
+#include "morsetree.h"
 
 const char *morse_codes[] = {
     ".-",   //A

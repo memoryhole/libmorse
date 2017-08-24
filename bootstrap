@@ -1,7 +1,10 @@
 #!/bin/sh
 
-libtoolize && \
-aclocal && \
-autoheader && \
-automake --add-missing && \
-autoconf
+mkdir -p autotools m4
+autoreconf --force --install
+
+#libtoolize && \
+#aclocal && \
+#autoheader && \
+##automake --add-missing && \
+#autoconf
