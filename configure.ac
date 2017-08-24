@@ -4,6 +4,9 @@
 AC_PREREQ([2.69])
 AC_INIT([morse], [1.0])
 
+AC_CHECK_PROG(XXD,[xxd],[xxd],[no])
+test "$XXD" == "no" && AC_MSG_ERROR([Required program 'xxd' not found.])
+
 CFLAGS=${CFLAGS="-O3 -Wall -Wextra -Werror"} 
 
 AC_CONFIG_MACRO_DIRS([m4])

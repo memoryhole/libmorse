@@ -20,3 +20,6 @@ compile
 morse
 *.o
 compile_commands.json
+morsetree.c
+morsetree.bin
+buildtree

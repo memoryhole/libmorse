@@ -6,14 +6,14 @@ morse_SOURCES = main.c
 morse_LDADD = libmorse.la
 morse_LDFLAGS = -static
 
-libmorse_la_SOURCES = morse.c data.c
+libmorse_la_SOURCES = morse.c data.c morsetree.c
 
-BUILT_SOURCES = morsetree.bin
-CLEANFILES = morsetree.bin
+BUILT_SOURCES = morsetree.c
+CLEANFILES = morsetree.c
 
-buildtree_SOURCES = buildtree.c
-buildtree_LDADD = libmorse.la
-buildtree_LDFLAGS = -static
+buildtree_SOURCES = buildtree.c data.c
+buildtree_CFLAGS = $(AM_CFLAGS)
 
-morsetree.bin : buildtree
+morsetree.c : buildtree
 	./buildtree morsetree.bin
+	xxd -i morsetree.bin > $@
