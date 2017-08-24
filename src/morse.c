@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include "morse.h"
-#include "tables.h"
+#include "data.h"
 
 morse_state morse_init(morse_parser *parser) {
     memset(parser, 0, sizeof(morse_parser));
@@ -14,7 +15,15 @@ morse_state morse_init(morse_parser *parser) {
     return MORSE_CONTINUE;
 }
 
-morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, char *dest, size_t destlen) {
+morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, char *dest, size_t dest_len, size_t *fill_len) {
+
+    if (dest_len < MORSE_MIN_LEN) {
+        return MORSE_ERROR;
+    }
+
+    if (parser->src_offset == 0) {
+        *fill_len = 0;
+    }
 
     while(parser->src_offset < length) {
         int i = parser->src_offset;
@@ -38,7 +47,7 @@ morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, 
         const char *code = morse_codes[table_idx];
         const size_t codelen = strlen(code) + 1;
 
-        if (codelen > destlen - parser->dest_offset) {
+        if (codelen > dest_len - parser->dest_offset) {
             parser->dest_offset = 0;
             return MORSE_CONTINUE;
         }
@@ -47,12 +56,12 @@ morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, 
 
         parser->dest_offset += codelen - 1;
         parser->src_offset += 1;
+        *fill_len = parser->dest_offset;
     }
 
     return MORSE_DONE;
 }
 
-morse_state morse_reset(morse_parser *parser);
 morse_state morse_parse(morse_parser *parser, char *morse_string, size_t length);
 morse_state morse_push_symbol(morse_parser *parser, morse_symbol symbol);
 morse_state morse_get_value(morse_parser *parser);

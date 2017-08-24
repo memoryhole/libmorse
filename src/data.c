@@ -1,4 +1,4 @@
-#include "tables.h"
+#include "data.h"
 
 const char *morse_codes[] = {
     ".-",   //A
@@ -28,3 +28,6 @@ const char *morse_codes[] = {
     "-.--", //Y
     "--..", //Z
 };
+
+const size_t morse_codes_len = sizeof(morse_codes) / sizeof(morse_codes[0]);
+

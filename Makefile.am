@@ -14,4 +14,6 @@ realclean: distclean
 		install-sh \
 		ltmain.sh \
 		missing \
+		m4 \
+		autom4te.cache \
 		src/Makefile.in
