@@ -29,6 +29,8 @@ morse_test_CFLAGS =  -I$(top_srcdir)/src --coverage
 morse_test_LDFLAGS = -lmorse -lcmocka -static
 
 
+EXTRA_DIST = README.md
+
 src/morsetree.c : buildtree
 	./buildtree morsetree.bin
 	xxd -i morsetree.bin > $@

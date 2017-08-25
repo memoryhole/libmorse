@@ -15,10 +15,3 @@ libmorse is a small c library for working with morse code.
 * ascii to morse code
 * morse code to ascii
 * streaming morse code to ascii
-
-## Installation
-
-./bootstrap
-./configure
-make
-make install

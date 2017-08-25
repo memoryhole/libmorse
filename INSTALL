@@ -1,7 +1,6 @@
 Installation
 ============
 
-./bootstrap
 ./configure
 make
 make install
