@@ -101,7 +101,34 @@ morse_state morse_parse(morse_parser *parser, char *morse_string, size_t length,
 }
 
 morse_state morse_push_symbol(morse_parser *parser, morse_symbol symbol) {
+    if (symbol == MORSE_DIT) {
+        parser->tree_pos = morse_tree_dit(parser->tree_pos);
+
+    } else if (symbol == MORSE_DAH) {
+        parser->tree_pos = morse_tree_dah(parser->tree_pos);
+
+    } else {
+        return MORSE_INVALID_SEQUENCE;
+    }
+
+    if (parser->tree_pos > morsetree_bin_len) {
+        return MORSE_INVALID_SEQUENCE;
+    }
+
+    return MORSE_CONTINUE;
 }
 
-morse_state morse_get_value(morse_parser *parser) {
+morse_state morse_get_value(morse_parser *parser, char *dest) {
+    if (parser->tree_pos > morsetree_bin_len) {
+        return MORSE_INVALID_SEQUENCE;
+    }
+
+    uint8_t value = morsetree_bin[parser->tree_pos];
+
+    if (value != 0) {
+        *dest = value;
+        return MORSE_DONE;
+    }
+
+    return MORSE_INVALID_SEQUENCE;
 }

@@ -139,6 +139,9 @@ void morse_parse_invalid() {
 
     result = morse_parse(&morse, "..--", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
+
+    result = morse_parse(&morse, "..*-", 4, buf, buf_len, &fill_len);
+    assert_int_equal(result, MORSE_INVALID_SEQUENCE);
 }
  
  
