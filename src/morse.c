@@ -100,5 +100,8 @@ morse_state morse_parse(morse_parser *parser, char *morse_string, size_t length,
     return MORSE_DONE;
 }
 
-morse_state morse_push_symbol(morse_parser *parser, morse_symbol symbol);
-morse_state morse_get_value(morse_parser *parser);
+morse_state morse_push_symbol(morse_parser *parser, morse_symbol symbol) {
+}
+
+morse_state morse_get_value(morse_parser *parser) {
+}
