@@ -21,10 +21,11 @@ buildtree_CFLAGS = $(AM_CFLAGS)
 # TEST
 #
 check_PROGRAMS = morse_test
+TESTS = morse_test
 
-morse_test_SOURCES = test/morse_test.c
+morse_test_SOURCES = test/morse.c
 morse_test_LDADD = libmorse.la
-morse_test_CFLAGS =  -I$(top_srcdir)/src
+morse_test_CFLAGS =  -I$(top_srcdir)/src --coverage
 morse_test_LDFLAGS = -lmorse -lcmocka -static
 
 

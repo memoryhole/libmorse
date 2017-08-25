@@ -17,7 +17,7 @@ morse_state morse_init(morse_parser *parser) {
 
 morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, char *dest, size_t dest_len, size_t *fill_len) {
 
-    if (dest_len < MORSE_MIN_LEN) {
+    if (dest_len < MORSE_MIN_LEN + 1) {
         return MORSE_ERROR;
     }
 

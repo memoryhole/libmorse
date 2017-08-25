@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([morse], [1.0])
+AC_INIT([libmorse], [1.0])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([autotools])
 
@@ -11,7 +11,7 @@ test "$XXD" == "no" && AC_MSG_ERROR([Required program 'xxd' not found.])
 
 CFLAGS=${CFLAGS="-O3 -Wall -Wextra -Werror -Wpedantic"} 
 
-AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror])
+AM_INIT_AUTOMAKE([subdir-objects serial-tests foreign -Wall -Werror])
 AM_PROG_AR
 
 LT_INIT
