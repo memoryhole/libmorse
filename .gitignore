@@ -14,6 +14,7 @@ Makefile.in
 .deps/
 .dirstamp
 .libs/
+autotools
 *.l[ao]
 *~
 compile
