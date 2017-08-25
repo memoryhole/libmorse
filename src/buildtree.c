@@ -40,8 +40,8 @@ tree create_tree(void) {
             } else {
                 offset = 2 * offset + 2;
             }
-            pos = tree.data + offset;
         }
+        pos = tree.data + offset;
 
         *pos = value;
 
