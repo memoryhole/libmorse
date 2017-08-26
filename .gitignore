@@ -19,6 +19,7 @@ autotools
 *~
 compile
 morse
+morse_test
 *.o
 compile_commands.json
 morsetree.c
