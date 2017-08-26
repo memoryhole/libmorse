@@ -37,20 +37,20 @@ void morse_from_ascii_larger_than_buf() {
     char buf[buf_len];
     size_t fill_len;
 
-    morse_state result = morse_from_ascii(&morse, "ABCD", 4, buf, buf_len, &fill_len);
+    morse_state result = morse_from_ascii(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
     assert_int_equal(fill_len, 6);
     assert_memory_equal(buf, ".--...", 6);
 
-    result = morse_from_ascii(&morse, "ABCD", 4, buf, buf_len, &fill_len);
+    result = morse_from_ascii(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
     assert_int_equal(fill_len, 4);
     assert_memory_equal(buf, "-.-.", 4);
 
-    result = morse_from_ascii(&morse, "ABCD", 4, buf, buf_len, &fill_len);
+    result = morse_from_ascii(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
-    assert_int_equal(fill_len, 3);
-    assert_memory_equal(buf, "-..", 3);
+    assert_int_equal(fill_len, 5);
+    assert_memory_equal(buf, "....-", 5);
 }
 
 void morse_from_ascii_invalid_char() {
@@ -178,8 +178,10 @@ void morse_stream_multi_char() {
     assert_int_equal(result, MORSE_DONE);
     assert_int_equal(output, 'A');
 
-    //-...
-    result = morse_push_symbol(&morse, MORSE_DAH);
+    //.....
+    result = morse_push_symbol(&morse, MORSE_DIT);
+    assert_int_equal(result, MORSE_CONTINUE);
+    result = morse_push_symbol(&morse, MORSE_DIT);
     assert_int_equal(result, MORSE_CONTINUE);
     result = morse_push_symbol(&morse, MORSE_DIT);
     assert_int_equal(result, MORSE_CONTINUE);
@@ -189,8 +191,7 @@ void morse_stream_multi_char() {
     assert_int_equal(result, MORSE_CONTINUE);
     result = morse_get_value(&morse, &output);
     assert_int_equal(result, MORSE_DONE);
-    assert_int_equal(output, 'B');
-
+    assert_int_equal(output, '5');
 }
  
 void morse_stream_invalid() {
@@ -223,8 +224,9 @@ void morse_stream_invalid() {
     result = morse_push_symbol(&morse, MORSE_DIT);
     assert_int_equal(result, MORSE_CONTINUE);
     result = morse_push_symbol(&morse, MORSE_DIT);
+    assert_int_equal(result, MORSE_CONTINUE);
+    result = morse_push_symbol(&morse, MORSE_DIT);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
-
 }
  
 int main(void) {

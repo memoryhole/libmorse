@@ -27,21 +27,31 @@ morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, 
         char c = string[i];
         uint8_t table_idx = 0;
 
+        const char *code;
+        size_t codelen;
+
         if (c <= 'z' && c >= 'a') {
             table_idx = c - 'a';
+
+            code = morse_characters[table_idx];
+            codelen = strlen(code) + 1;
 
         } else if (c <= 'Z' && c >= 'A') {
             table_idx = c - 'A';
 
+            code = morse_characters[table_idx];
+            codelen = strlen(code) + 1;
+
         } else if (c <= '9' && c >= '0') {
             table_idx = c - '0';
+
+            code = morse_numbers[table_idx];
+            codelen = strlen(code) + 1;
 
         } else {
             return MORSE_INVALID_SEQUENCE;
         }
 
-        const char *code = morse_codes[table_idx];
-        const size_t codelen = strlen(code) + 1;
 
         if (codelen > dest_len - parser->buf_offsets.dest) {
             parser->buf_offsets.dest = 0;

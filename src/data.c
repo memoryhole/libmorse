@@ -2,7 +2,7 @@
 #include "data.h"
 #include "morsetree.h"
 
-const char *morse_codes[] = {
+const char *morse_characters[] = {
     ".-",   //A
     "-...", //B
     "-.-.", //C
@@ -31,7 +31,23 @@ const char *morse_codes[] = {
     "--..", //Z
 };
 
-const size_t morse_codes_len = sizeof(morse_codes) / sizeof(morse_codes[0]);
+const size_t morse_characters_len = sizeof(morse_characters) / sizeof(morse_characters[0]);
+
+const char *morse_numbers[] = {
+    "-----", //0
+    ".----", //1
+    "..---", //2
+    "...--", //3
+    "....-", //4
+    ".....", //5
+    "-....", //6
+    "--...", //7
+    "---..", //8
+    "----.", //9
+};
+
+const size_t morse_numbers_len = sizeof(morse_numbers) / sizeof(morse_numbers[0]);
+
 
 uint8_t morse_tree_dit(uint8_t pos) {
     return  2 * pos + 1;

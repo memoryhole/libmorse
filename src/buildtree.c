@@ -18,33 +18,53 @@ void die(const char *msg) {
     abort();
 }
 
+
+uint8_t insert_code(tree *tree, const char *code, uint8_t code_len, char value) {
+    printf("Inserting %c = %s\n", value, code);
+
+    uint8_t *pos = tree->data;
+    uint8_t offset = 0;
+
+    for (uint8_t i = 0; i < code_len; i++) {
+        if (code[i] == '.') {
+            offset = 2 * offset + 1;
+        } else {
+            offset = 2 * offset + 2;
+        }
+    }
+
+    pos = tree->data + offset;
+    *pos = value;
+
+    return offset;
+}
+
 tree create_tree(void) {
     tree tree;
     memset(&tree, 0, sizeof(tree));
 
     uint8_t max_offset = 0;
 
-    for (uint8_t i = 0; i < morse_codes_len; i++) {
-        const char *code = morse_codes[i];
+    for (uint8_t i = 0; i < morse_characters_len; i++) {
+        const char *code = morse_characters[i];
         const uint8_t code_len = strlen(code);
 
         const char value = i + 'A';
 
-        printf("Inserting %c = %s\n", value, code);
+        uint8_t offset = insert_code(&tree, code, code_len, value);
 
-        uint8_t *pos = tree.data;
-        uint8_t offset = 0;
-
-        for (uint8_t j = 0; j < code_len; j++) {
-            if (code[j] == '.') {
-                offset = 2 * offset + 1;
-            } else {
-                offset = 2 * offset + 2;
-            }
+        if (offset > max_offset) {
+            max_offset = offset;
         }
-        pos = tree.data + offset;
+    }
 
-        *pos = value;
+    for (uint8_t i = 0; i < morse_numbers_len; i++) {
+        const char *code = morse_numbers[i];
+        const uint8_t code_len = strlen(code);
+
+        const char value = i + '0';
+
+        uint8_t offset = insert_code(&tree, code, code_len, value);
 
         if (offset > max_offset) {
             max_offset = offset;
