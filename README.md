@@ -41,3 +41,20 @@ make install
 make check
 ```
 
+## CLI
+
+libmorse includes a [sample program](src/main.c) which excercises all library functions
+
+```
+$ morse -h
+Usage: morse [OPTION] [STRING]
+Converts standard input or argument to morse or text
+
+  -t        morse to text
+  -m        text to morse
+
+```
+
+## API
+
+TODO
