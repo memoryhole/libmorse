@@ -5,7 +5,7 @@
 #include "morse.h"
 #include "data.h"
 
-morse_state morse_init(morse_parser *parser) {
+morse_state morse_reset(morse_parser *parser) {
     memset(parser, 0, sizeof(morse_parser));
 
     return MORSE_CONTINUE;
@@ -127,6 +127,7 @@ morse_state morse_get_value(morse_parser *parser, char *dest) {
 
     if (value != 0) {
         *dest = value;
+        parser->tree_pos = 0;
         return MORSE_DONE;
     }
 

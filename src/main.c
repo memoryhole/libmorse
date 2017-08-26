@@ -3,7 +3,7 @@
 
 int main(void) {
     morse_parser parser;
-    morse_init(&parser);
+    morse_reset(&parser);
 
     char buf[10];
     size_t buf_fill;
