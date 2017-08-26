@@ -11,7 +11,7 @@ morse_state morse_reset(morse_parser *parser) {
     return MORSE_CONTINUE;
 }
 
-morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, char *dest, size_t dest_len, size_t *fill_len) {
+morse_state morse_from_text(morse_parser *parser, char *string, size_t length, char *dest, size_t dest_len, int *fill_len) {
 
     if (dest_len < MORSE_MIN_LEN + 1) {
         return MORSE_ERROR;
@@ -48,6 +48,11 @@ morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, 
             code = morse_numbers[table_idx];
             codelen = strlen(code) + 1;
 
+        } else if (c == ' ' || c == '\n') {
+            //skip
+            parser->buf_offsets.src += 1;
+            continue;
+
         } else {
             return MORSE_INVALID_SEQUENCE;
         }
@@ -68,7 +73,7 @@ morse_state morse_from_ascii(morse_parser *parser, char *string, size_t length, 
     return MORSE_DONE;
 }
 
-morse_state morse_parse(morse_parser *parser, char *morse_string, size_t length, char *dest, size_t dest_len, size_t *fill_len) {
+morse_state morse_to_text(morse_parser *parser, char *morse_string, size_t length, char *dest, size_t dest_len, int *fill_len) {
 
     for (size_t i = parser->buf_offsets.src; i < length; i++) {
         const char symbol = morse_string[i];
@@ -79,7 +84,7 @@ morse_state morse_parse(morse_parser *parser, char *morse_string, size_t length,
         } else if (symbol == '-') {
             parser->tree_pos = morse_tree_dah(parser->tree_pos);
 
-        } else if (symbol == ' ') {
+        } else if (symbol == ' ' || symbol == '\n') {
             uint8_t value = morsetree_bin[parser->tree_pos];
             if (parser->tree_pos > morsetree_bin_len || value == 0) {
                 return MORSE_INVALID_SEQUENCE;

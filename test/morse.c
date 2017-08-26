@@ -4,7 +4,7 @@
 #include <cmocka.h>
 #include <morse.h>
  
-void morse_from_ascii_small_buf() {
+void morse_from_text_small_buf() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -12,11 +12,11 @@ void morse_from_ascii_small_buf() {
     char buf[buf_len];
     size_t fill_len;
 
-    morse_state result = morse_from_ascii(&morse, "ABC", 3, buf, buf_len, &fill_len);
+    morse_state result = morse_from_text(&morse, "ABC", 3, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_ERROR);
 }
 
-void morse_from_ascii_fits_buf() {
+void morse_from_text_fits_buf() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -24,12 +24,12 @@ void morse_from_ascii_fits_buf() {
     char buf[buf_len];
     size_t fill_len;
 
-    morse_state result = morse_from_ascii(&morse, "A", 1, buf, buf_len, &fill_len);
+    morse_state result = morse_from_text(&morse, "A", 1, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
     assert_memory_equal(buf, ".-", 2);
 }
 
-void morse_from_ascii_larger_than_buf() {
+void morse_from_text_larger_than_buf() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -37,23 +37,23 @@ void morse_from_ascii_larger_than_buf() {
     char buf[buf_len];
     size_t fill_len;
 
-    morse_state result = morse_from_ascii(&morse, "ABC4", 4, buf, buf_len, &fill_len);
+    morse_state result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
     assert_int_equal(fill_len, 6);
     assert_memory_equal(buf, ".--...", 6);
 
-    result = morse_from_ascii(&morse, "ABC4", 4, buf, buf_len, &fill_len);
+    result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
     assert_int_equal(fill_len, 4);
     assert_memory_equal(buf, "-.-.", 4);
 
-    result = morse_from_ascii(&morse, "ABC4", 4, buf, buf_len, &fill_len);
+    result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
     assert_int_equal(fill_len, 5);
     assert_memory_equal(buf, "....-", 5);
 }
 
-void morse_from_ascii_invalid_char() {
+void morse_from_text_invalid_char() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -61,11 +61,11 @@ void morse_from_ascii_invalid_char() {
     char buf[buf_len];
     size_t fill_len;
 
-    morse_state result = morse_from_ascii(&morse, "#", 3, buf, buf_len, &fill_len);
+    morse_state result = morse_from_text(&morse, "#", 3, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
 }
 
-void morse_parse_single_char() {
+void morse_to_text_single_char() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -73,13 +73,13 @@ void morse_parse_single_char() {
     char buf[buf_len];
     size_t fill_len;
 
-    morse_state result = morse_parse(&morse, ".-", 2, buf, buf_len, &fill_len);
+    morse_state result = morse_to_text(&morse, ".-", 2, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
     assert_int_equal(fill_len, 1);
     assert_memory_equal(buf, "A", 1);
 }
 
-void morse_parse_multi_char() {
+void morse_to_text_multi_char() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -90,13 +90,13 @@ void morse_parse_multi_char() {
     char *seq = ".- -... -.-.";
     size_t seq_len = 12;
 
-    morse_state result = morse_parse(&morse, seq, seq_len, buf, buf_len, &fill_len);
+    morse_state result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
     assert_int_equal(fill_len, 3);
     assert_memory_equal(buf, "ABC", 3);
 }
 
-void morse_parse_small_buf() {
+void morse_to_text_small_buf() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -107,23 +107,23 @@ void morse_parse_small_buf() {
     char *seq = ".- -... -.-.";
     size_t seq_len = 12;
 
-    morse_state result = morse_parse(&morse, seq, seq_len, buf, buf_len, &fill_len);
+    morse_state result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
     assert_int_equal(fill_len, 1);
     assert_memory_equal(buf, "A", 1);
 
-    result = morse_parse(&morse, seq, seq_len, buf, buf_len, &fill_len);
+    result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
     assert_int_equal(fill_len, 1);
     assert_memory_equal(buf, "B", 1);
 
-    result = morse_parse(&morse, seq, seq_len, buf, buf_len, &fill_len);
+    result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
     assert_int_equal(fill_len, 1);
     assert_memory_equal(buf, "C", 1);
 }
 
-void morse_parse_invalid() {
+void morse_to_text_invalid() {
     morse_parser morse;
     morse_reset(&morse);
 
@@ -135,15 +135,15 @@ void morse_parse_invalid() {
     size_t seq_len = 10;
 
     // long sequence
-    morse_state result = morse_parse(&morse, seq, seq_len, buf, buf_len, &fill_len);
+    morse_state result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
 
     // empty node
-    result = morse_parse(&morse, "..--", 4, buf, buf_len, &fill_len);
+    result = morse_to_text(&morse, "..--", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
 
     // invalid char
-    result = morse_parse(&morse, "..*-", 4, buf, buf_len, &fill_len);
+    result = morse_to_text(&morse, "..*-", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
 }
  
@@ -231,14 +231,14 @@ void morse_stream_invalid() {
  
 int main(void) {
   const struct CMUnitTest tests[] = {
-    cmocka_unit_test(morse_from_ascii_small_buf),
-    cmocka_unit_test(morse_from_ascii_fits_buf),
-    cmocka_unit_test(morse_from_ascii_larger_than_buf),
-    cmocka_unit_test(morse_from_ascii_invalid_char),
-    cmocka_unit_test(morse_parse_single_char),
-    cmocka_unit_test(morse_parse_multi_char),
-    cmocka_unit_test(morse_parse_small_buf),
-    cmocka_unit_test(morse_parse_invalid),
+    cmocka_unit_test(morse_from_text_small_buf),
+    cmocka_unit_test(morse_from_text_fits_buf),
+    cmocka_unit_test(morse_from_text_larger_than_buf),
+    cmocka_unit_test(morse_from_text_invalid_char),
+    cmocka_unit_test(morse_to_text_single_char),
+    cmocka_unit_test(morse_to_text_multi_char),
+    cmocka_unit_test(morse_to_text_small_buf),
+    cmocka_unit_test(morse_to_text_invalid),
     cmocka_unit_test(morse_stream_single_char),
     cmocka_unit_test(morse_stream_multi_char),
     cmocka_unit_test(morse_stream_invalid)
