@@ -4,22 +4,23 @@
 #include <stdint.h>
 #include "data.h"
 
+#define TREE_LEN 64
+
 typedef struct tree {
-    uint8_t *data;
+    uint8_t data[TREE_LEN];
     uint8_t len;
 } tree;
 
 void dump_tree(tree tree);
 
+void die(const char *msg) {
+    fputs(msg, stderr);
+    abort();
+}
+
 tree create_tree(void) {
     tree tree;
-    tree.data = calloc(128, sizeof(uint8_t));
-    tree.len = 128;
-
-    if (!tree.data) {
-        fprintf(stderr, "calloc failed");
-        abort();
-    }
+    memset(&tree, 0, sizeof(tree));
 
     uint8_t max_offset = 0;
 
@@ -102,9 +103,15 @@ int main(int argc, char **argv) {
     dump_tree(tree);
 
     FILE *output = fopen(argv[1], "w");
-    fwrite(tree.data, sizeof(uint8_t), tree.len, output);
+    if (!output) {
+        die("failed to open outputfile");
+    }
+
+    int result = fwrite(tree.data, sizeof(uint8_t), tree.len, output);
+    if (result != tree.len) {
+        die("failed to write outputfile");
+    }
     fclose(output);
 
-    free(tree.data);
     exit(EXIT_SUCCESS);
 }
