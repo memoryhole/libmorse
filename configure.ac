@@ -7,6 +7,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([autotools])
 
 AC_CHECK_PROG(XXD,[xxd],[xxd],[no])
+AC_CHECK_PROG(UNIFDEF,[unifdef],[unifdef],[no])
 test "$XXD" == "no" && AC_MSG_ERROR([Required program 'xxd' not found.])
 test "$UNIFDEF" == "no" && AC_MSG_ERROR([Required program 'unifdef' not found.])
 
