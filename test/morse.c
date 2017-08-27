@@ -10,7 +10,7 @@ void morse_from_text_small_buf() {
 
     int buf_len = 1;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     morse_state result = morse_from_text(&morse, "ABC", 3, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_ERROR);
@@ -22,7 +22,7 @@ void morse_from_text_fits_buf() {
 
     int buf_len = 6;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     morse_state result = morse_from_text(&morse, "A", 1, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
@@ -35,7 +35,7 @@ void morse_from_text_larger_than_buf() {
 
     int buf_len = 7;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     morse_state result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
@@ -59,7 +59,7 @@ void morse_from_text_invalid_char() {
 
     int buf_len = 7;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     morse_state result = morse_from_text(&morse, "#", 3, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_INVALID_SEQUENCE);
@@ -71,7 +71,7 @@ void morse_to_text_single_char() {
 
     int buf_len = 7;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     morse_state result = morse_to_text(&morse, ".-", 2, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
@@ -85,7 +85,7 @@ void morse_to_text_multi_char() {
 
     int buf_len = 7;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     char *seq = ".- -... -.-.";
     size_t seq_len = 12;
@@ -102,10 +102,10 @@ void morse_to_text_small_buf() {
 
     int buf_len = 1;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     char *seq = ".- -... -.-.";
-    size_t seq_len = 12;
+    int seq_len = 12;
 
     morse_state result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
@@ -129,10 +129,10 @@ void morse_to_text_invalid() {
 
     int buf_len = 1;
     char buf[buf_len];
-    size_t fill_len;
+    int fill_len;
 
     char *seq = ".--...-.-.";
-    size_t seq_len = 10;
+    int seq_len = 10;
 
     // long sequence
     morse_state result = morse_to_text(&morse, seq, seq_len, buf, buf_len, &fill_len);

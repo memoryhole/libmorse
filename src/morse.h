@@ -16,7 +16,6 @@ struct morse_buf_offsets {
     size_t src;
 };
 
-
 typedef struct morse_parser {
     struct morse_buf_offsets buf_offsets;
     uint8_t tree_pos;

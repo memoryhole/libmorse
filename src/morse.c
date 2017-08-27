@@ -75,44 +75,47 @@ morse_state morse_from_text(morse_parser *parser, char *string, size_t length, c
 
 morse_state morse_to_text(morse_parser *parser, char *morse_string, size_t length, char *dest, size_t dest_len, int *fill_len) {
 
-    for (size_t i = parser->buf_offsets.src; i < length; i++) {
+    morse_state result = MORSE_ERROR;
+
+    size_t i = 0;
+    for (i = parser->buf_offsets.src; i < length; i++) {
         const char symbol = morse_string[i];
 
-        if (symbol == '.') {
-            parser->tree_pos = morse_tree_dit(parser->tree_pos);
-
-        } else if (symbol == '-') {
-            parser->tree_pos = morse_tree_dah(parser->tree_pos);
-
-        } else if (symbol == ' ' || symbol == '\n') {
-            uint8_t value = morsetree_bin[parser->tree_pos];
-            if (parser->tree_pos > morsetree_bin_len || value == 0) {
-                return MORSE_INVALID_SEQUENCE;
+        if (symbol == '.' || symbol == '-') {
+            result = morse_push_symbol(parser, symbol);
+            if (result == MORSE_INVALID_SEQUENCE) {
+                return result;
             }
 
-            *(dest + parser->buf_offsets.dest) = value;
-            parser->buf_offsets.dest += 1;
-            parser->tree_pos = 0;
+        } else if (symbol == ' ' || symbol == '\n') {
 
             if (parser->buf_offsets.dest == dest_len) {
                 *fill_len = parser->buf_offsets.dest;
                 parser->buf_offsets.dest = 0;
-                parser->buf_offsets.src = i + 1;
+                parser->buf_offsets.src = i;
                 return MORSE_CONTINUE;
             }
+
+            result = morse_get_value(parser, dest + parser->buf_offsets.dest);
+            parser->buf_offsets.dest += 1;
+            if (result == MORSE_INVALID_SEQUENCE) {
+                return result;
+            }
+
+        } else {
+            return MORSE_INVALID_SEQUENCE;
         }
     }
 
-    uint8_t value = morsetree_bin[parser->tree_pos];
-    if (parser->tree_pos > morsetree_bin_len || value == 0) {
-        return MORSE_INVALID_SEQUENCE;
+    if (parser->buf_offsets.dest == dest_len) {
+        *fill_len = parser->buf_offsets.dest;
+        parser->buf_offsets.dest = 0;
+        parser->buf_offsets.src = i;
+        return MORSE_CONTINUE;
     }
 
-    *(dest + parser->buf_offsets.dest) = value;
-    parser->buf_offsets.dest += 1;
-    *fill_len = parser->buf_offsets.dest;
-
-    return MORSE_DONE;
+    *fill_len = parser->buf_offsets.dest + 1;
+    return morse_get_value(parser, dest + parser->buf_offsets.dest);
 }
 
 morse_state morse_push_symbol(morse_parser *parser, morse_symbol symbol) {
