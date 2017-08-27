@@ -4,6 +4,7 @@ script:
     - ./configure
     - make
     - make check
+    - make release
 before_install:
     - sudo apt-get -qq update
     - sudo apt-get install -y unifdef
