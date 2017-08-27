@@ -36,7 +36,8 @@ morse_test_single_header_LDFLAGS = -lcmocka
 EXTRA_DIST = README.md
 
 src/morse.h.raw: src/morsetree.c
-	cat src/morsetree.c src/data.h src/data.c src/morse_parser.h src/morse.h src/morse.c | unifdef -x 1 -UDATA_H -UMORSE_H -DSINGLE_HEADER  > $@
+	cat src/morsetree.c src/data.h src/data.c src/morse_parser.h src/morse.h src/morse.c > src/morse.h.raw
+	- unifdef -UDATA_H -UMORSE_H -DSINGLE_HEADER -o $@ $@
 
 morse.h: src/morse.h.raw src/morse_h.m4
 	m4 -Isrc src/morse_h.m4 > morse.h
