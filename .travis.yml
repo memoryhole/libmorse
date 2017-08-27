@@ -6,4 +6,4 @@ script:
     - make check
 before_install:
     - sudo apt-get -qq update
-    - sudo apt-get install -y cmocka unifdef xxd
+    - sudo apt-get install -y cmocka unifdef
