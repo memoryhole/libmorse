@@ -28,3 +28,4 @@ morsetree.bin
 buildtree
 morse_test_single_header
 morse.h.raw
+*.swp

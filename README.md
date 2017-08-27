@@ -57,4 +57,6 @@ Converts standard input or argument to morse or text
 
 ## API
 
-TODO
+See the [morse.h](src/morse.h) header for the API docs.
+See [main.c](src/main.c) for an example program using all API functions.
+
