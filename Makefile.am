@@ -9,10 +9,9 @@ morse_SOURCES = src/main.c
 morse_LDADD = libmorse.la
 morse_LDFLAGS = -static
 
-libmorse_la_SOURCES = src/morse.c src/data.c src/morsetree.c
+libmorse_la_SOURCES = src/morse.h src/morse.c src/data.h src/data.c src/morsetree.h src/morsetree.c src/morse_parser.h
 
 BUILT_SOURCES = src/morsetree.c morse.h
-CLEANFILES = src/morsetree.c morsetree.bin morse.h src/morse.h.raw
 
 buildtree_SOURCES = src/buildtree.c src/data.c
 buildtree_CFLAGS = $(AM_CFLAGS)
@@ -33,13 +32,20 @@ morse_test_single_header_CFLAGS =  -I$(top_srcdir)
 morse_test_single_header_LDFLAGS = -lcmocka
 
 
-EXTRA_DIST = README.md
+DIST_MD5 = ${PACKAGE}-${VERSION}.md5
+EXTRA_DIST = README.md src/morse_h.m4
+CLEANFILES = src/morsetree.c morsetree.bin morse.h src/morse.h.raw $(DIST_MD5)
+
+.PHONY: release
+release: distcheck
+	md5sum ${PACKAGE}-${VERSION}.tar.gz config.h > $(DIST_MD5)
 
 src/morse.h.raw: src/morsetree.c
-	cat src/morsetree.c src/data.h src/data.c src/morse_parser.h src/morse.h src/morse.c | unifdef -x 1 -UDATA_H -UMORSE_H -DSINGLE_HEADER  > $@
+	cat $(top_srcdir)/src/morsetree.c $(top_srcdir)/src/data.h $(top_srcdir)/src/data.c $(top_srcdir)/src/morse_parser.h $(top_srcdir)/src/morse.h $(top_srcdir)/src/morse.c > src/morse.h.raw
+	- unifdef -UDATA_H -UMORSE_H -DSINGLE_HEADER -o $@ $@
 
-morse.h: src/morse.h.raw src/morse_h.m4
-	m4 -Isrc src/morse_h.m4 > morse.h
+morse.h: src/morse.h.raw $(top_srcdir)/src/morse_h.m4
+	m4 -I$(top_srcdir) $(top_srcdir)/src/morse_h.m4 > morse.h
 
 src/morsetree.c: buildtree
 	./buildtree morsetree.bin
