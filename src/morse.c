@@ -2,8 +2,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
+
+#ifndef SINGLE_HEADER
 #include "morse.h"
 #include "data.h"
+#endif
 
 morse_state morse_reset(morse_parser *parser) {
     memset(parser, 0, sizeof(morse_parser));
