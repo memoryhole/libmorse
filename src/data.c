@@ -1,6 +1,7 @@
 #include <stdint.h>
+#ifndef SINGLE_HEADER
 #include "data.h"
-#include "morsetree.h"
+#endif
 
 const char *morse_characters[] = {
     ".-",   //A

@@ -11,6 +11,7 @@ Makefile.in
 /m4/
 /missing
 /stamp-h?
+/morse.h
 .deps/
 .dirstamp
 .libs/
@@ -25,3 +26,5 @@ compile_commands.json
 morsetree.c
 morsetree.bin
 buildtree
+morse_test_single_header
+morse.h.raw

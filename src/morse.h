@@ -1,30 +1,9 @@
 #ifndef MORSE_H
 #define MORSE_H
 
-#include <unistd.h>
-#include <stdint.h>
-
-typedef enum morse_state {
-    MORSE_DONE,
-    MORSE_ERROR,
-    MORSE_INVALID_SEQUENCE,
-    MORSE_CONTINUE
-} morse_state;
-
-struct morse_buf_offsets {
-    size_t dest;
-    size_t src;
-};
-
-typedef struct morse_parser {
-    struct morse_buf_offsets buf_offsets;
-    uint8_t tree_pos;
-} morse_parser;
-
-typedef enum morse_symbol {
-    MORSE_DIT = '.',
-    MORSE_DAH = '-'
-} morse_symbol;
+#ifndef SINGLE_HEADER
+#include "morse_parser.h"
+#endif
 
 morse_state morse_reset(morse_parser *parser);
 morse_state morse_from_text(morse_parser *parser, char *string, size_t length, char *dest, size_t dest_len, int *fill_len);

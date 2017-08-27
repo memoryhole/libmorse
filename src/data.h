@@ -3,7 +3,10 @@
 
 #include <unistd.h>
 #include <stdint.h>
+
+#ifndef SINGLE_HEADER
 #include "morsetree.h"
+#endif
 
 #define MORSE_MIN_LEN 5
 
