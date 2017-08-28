@@ -16,18 +16,15 @@ libmorse is a small c library for working with morse code.
 * morse code to ascii
 * streaming morse code to ascii
 
-## Building and Installing
+## Usage
 
-### From GIT
+### Single Header
+The easiest way to use libmorse is to download the single-file header from the [latest release](https://github.com/memoryhole/libmorse/releases) and include it in your application.
 
-```bash
-./bootstrap
-./configure
-make
-make install
-```
 
-### From Tarball
+### Shared Library
+To build and install libmorse as a shared library you can download the [latest release](https://github.com/memoryhole/libmorse/releases) tarball follow the usual autotools dance:
+
 
 ```bash
 ./configure

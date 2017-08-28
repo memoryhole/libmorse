@@ -68,7 +68,13 @@ morse_state morse_from_text(morse_parser *parser, char *string, size_t length, c
 
         memcpy(dest + parser->buf_offsets.dest, code, codelen);
 
-        parser->buf_offsets.dest += codelen - 1;
+        // add a space if we are not at the end
+        if (parser->buf_offsets.src < length - 1) {
+            *(dest + parser->buf_offsets.dest + codelen - 1) = ' ';
+            *(dest + parser->buf_offsets.dest + codelen) = 0;
+        }
+
+        parser->buf_offsets.dest += codelen;
         parser->buf_offsets.src += 1;
         *fill_len = parser->buf_offsets.dest;
     }

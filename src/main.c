@@ -77,9 +77,10 @@ int morse_string_to_text(morse_parser *parser, char *input) {
     char buf[buflen];
     int written = 0;
 
-    int return_value = EXIT_SUCCESS;
+    int return_value = -1;
 
-    while((result = morse_to_text(parser, input, strlen(input), buf, buflen, &written)) != MORSE_INVALID_SEQUENCE) {
+    while (return_value == -1) {
+        result = morse_to_text(parser, input, strlen(input), buf, buflen, &written);
 
         if (result == MORSE_INVALID_SEQUENCE) {
             fprintf(stderr, "invalid morse sequence\n");
@@ -113,11 +114,12 @@ int text_to_morse(morse_parser *parser, char *input) {
     char buf[buflen];
     int written = 0;
 
-    int return_value = EXIT_SUCCESS;
+    int return_value = -1;
 
     morse_state result = MORSE_INVALID_SEQUENCE;
    
-    while((result = morse_from_text(parser, input, strlen(input), buf, buflen, &written)) != MORSE_INVALID_SEQUENCE) {
+    while (return_value == -1) {
+        result = morse_from_text(parser, input, strlen(input), buf, buflen, &written);
         if (result == MORSE_INVALID_SEQUENCE) {
             fprintf(stderr, "invalid text: %s\nOnly a-z A-Z 0-9 supported.\n", input);
             return_value = EXIT_FAILURE;
@@ -180,8 +182,17 @@ int main(int argc, char **argv) {
 
         } else {
             char temp[2] = {0, 0};
+            bool firstchar = true;
                 
             while ((temp[0] = getc(stdin)) != EOF) {
+                if (!firstchar) {
+                    if (temp[0] != '\n') {
+                        printf(" ");
+                    }
+                } else {
+                    firstchar = false;
+                }
+
                 int result = text_to_morse(&parser, temp);
                 morse_reset(&parser);
 

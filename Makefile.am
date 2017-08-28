@@ -3,13 +3,14 @@
 #
 bin_PROGRAMS = morse
 noinst_PROGRAMS = buildtree
+include_HEADERS = src/morse.h  src/data.h src/morsetree.h src/morse_parser.h
 lib_LTLIBRARIES = libmorse.la
 
 morse_SOURCES = src/main.c
 morse_LDADD = libmorse.la
 morse_LDFLAGS = -static
 
-libmorse_la_SOURCES = src/morse.h src/morse.c src/data.h src/data.c src/morsetree.h src/morsetree.c src/morse_parser.h
+libmorse_la_SOURCES = src/morse.c src/data.c src/morsetree.c
 
 BUILT_SOURCES = src/morsetree.c morse.h
 
