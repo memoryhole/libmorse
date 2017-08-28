@@ -20,12 +20,12 @@ libmorse is a small c library for working with morse code.
 
 #### Single Header
 
-The easiest way to use libmorse is to download the single-file header from the [latest release](https://github.com/memoryhole/libmorse/releases) and include it in your application.
+The easiest way to use libmorse is to download the single-file header from the [latest release](https://github.com/memoryhole/libmorse/releases/latest) and include it in your application.
 
 
 #### Shared Library
 
-To build and install libmorse as a shared library you can download the [latest release](https://github.com/memoryhole/libmorse/releases) tarball and follow the usual autotools dance:
+To build and install libmorse as a shared library you can download the [latest release](https://github.com/memoryhole/libmorse/releases/latest) tarball and follow the usual autotools dance:
 
 ```bash
 ./configure
@@ -65,7 +65,7 @@ $ echo libmorse | morse -m
 
 ##### morse to text
 ```bash
-$ echo ".-.. .. -... -- --- .-. ... ." | ./morse -t
+$ echo ".-.. .. -... -- --- .-. ... ." | morse -t
 LIBMORSE
 ```
 
