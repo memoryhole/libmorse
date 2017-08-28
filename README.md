@@ -5,7 +5,7 @@
  |_|_|_.__/_|_|_\___/_| /__/\___|
 ```                           
 
-# libmorse
+# libmorse  [![Build Status](https://travis-ci.org/memoryhole/libmorse.svg?branch=master)](https://travis-ci.org/memoryhole/libmorse)
 
 libmorse is a small c library for working with morse code.
 
