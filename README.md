@@ -9,22 +9,22 @@
 
 libmorse is a small c library for working with morse code.
 
-##### Features
+#### Features
 
-* no dynamic memory allocations (malloc)
+* no dynamic memory allocations
 * ascii to morse code
 * morse code to ascii
 * streaming morse code to ascii
 
 ## Usage
 
-### Single Header
+####Single Header
 The easiest way to use libmorse is to download the single-file header from the [latest release](https://github.com/memoryhole/libmorse/releases) and include it in your application.
 
 
-### Shared Library
-To build and install libmorse as a shared library you can download the [latest release](https://github.com/memoryhole/libmorse/releases) tarball follow the usual autotools dance:
+#### Shared Library
 
+To build and install libmorse as a shared library you can download the [latest release](https://github.com/memoryhole/libmorse/releases) tarball and follow the usual autotools dance:
 
 ```bash
 ./configure
@@ -32,17 +32,21 @@ make
 make install
 ```
 
-## Run Tests
+If you clone the GIT repository then you will need to run bootstrap first:
 
 ```bash
-make check
+./bootstrap
+./configure
+make
+make install
 ```
+
 
 ## CLI
 
 libmorse includes a [sample program](src/main.c) which excercises all library functions
 
-```
+```bash
 $ morse -h
 Usage: morse [OPTION] [STRING]
 Converts standard input or argument to morse or text
@@ -50,6 +54,18 @@ Converts standard input or argument to morse or text
   -t        morse to text
   -m        text to morse
 
+```
+
+######text to morse
+```bash
+$ echo libmorse | morse -m
+.-.. .. -... -- --- .-. ... .
+```
+
+######morse to text
+```bash
+$ echo ".-.. .. -... -- --- .-. ... ." | ./morse -t
+LIBMORSE
 ```
 
 ## API

@@ -39,18 +39,23 @@ void morse_from_text_larger_than_buf() {
 
     morse_state result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
-    assert_int_equal(fill_len, 6);
-    assert_memory_equal(buf, ".--...", 6);
+    assert_int_equal(fill_len, 3);
+    assert_memory_equal(buf, ".- ", 4);
 
     result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_CONTINUE);
-    assert_int_equal(fill_len, 4);
-    assert_memory_equal(buf, "-.-.", 4);
+    assert_int_equal(fill_len, 5);
+    assert_memory_equal(buf, "-... ", 6);
+
+    result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
+    assert_int_equal(result, MORSE_CONTINUE);
+    assert_int_equal(fill_len, 5);
+    assert_memory_equal(buf, "-.-. ", 6);
 
     result = morse_from_text(&morse, "ABC4", 4, buf, buf_len, &fill_len);
     assert_int_equal(result, MORSE_DONE);
     assert_int_equal(fill_len, 5);
-    assert_memory_equal(buf, "....-", 5);
+    assert_memory_equal(buf, "....-", 6);
 }
 
 void morse_from_text_invalid_char() {

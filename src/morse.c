@@ -37,19 +37,19 @@ morse_state morse_from_text(morse_parser *parser, char *string, size_t length, c
             table_idx = c - 'a';
 
             code = morse_characters[table_idx];
-            codelen = strlen(code) + 1;
+            codelen = strlen(code);
 
         } else if (c <= 'Z' && c >= 'A') {
             table_idx = c - 'A';
 
             code = morse_characters[table_idx];
-            codelen = strlen(code) + 1;
+            codelen = strlen(code);
 
         } else if (c <= '9' && c >= '0') {
             table_idx = c - '0';
 
             code = morse_numbers[table_idx];
-            codelen = strlen(code) + 1;
+            codelen = strlen(code);
 
         } else if (c == ' ' || c == '\n') {
             //skip
@@ -61,20 +61,22 @@ morse_state morse_from_text(morse_parser *parser, char *string, size_t length, c
         }
 
 
-        if (codelen > dest_len - parser->buf_offsets.dest) {
+        if (codelen >= dest_len - parser->buf_offsets.dest) {
             parser->buf_offsets.dest = 0;
             return MORSE_CONTINUE;
         }
 
-        memcpy(dest + parser->buf_offsets.dest, code, codelen);
+        memcpy(dest + parser->buf_offsets.dest, code, codelen + 1);
 
         // add a space if we are not at the end
         if (parser->buf_offsets.src < length - 1) {
-            *(dest + parser->buf_offsets.dest + codelen - 1) = ' ';
-            *(dest + parser->buf_offsets.dest + codelen) = 0;
+            *(dest + parser->buf_offsets.dest + codelen) = ' ';
+            *(dest + parser->buf_offsets.dest + codelen + 1) = 0;
+            parser->buf_offsets.dest += codelen + 1;
+        } else {
+            parser->buf_offsets.dest += codelen;
         }
 
-        parser->buf_offsets.dest += codelen;
         parser->buf_offsets.src += 1;
         *fill_len = parser->buf_offsets.dest;
     }
