@@ -23,6 +23,122 @@ typedef enum mode {
     TO_TEXT
 } mode;
 
+/*
+ * Demonstrates how to parse morse from a stream
+ */
+int stdin_morse_to_text(morse_parser *parser) {
+    char input_char = EOF;
+    morse_state result = MORSE_INVALID_SEQUENCE;
+
+    char value;
+
+    int return_value = EXIT_SUCCESS;
+
+    while ((input_char = getc(stdin)) != EOF) {
+        if (input_char == MORSE_DIT || input_char == MORSE_DAH) {
+            result = morse_push_symbol(parser, input_char);
+
+            if (result == MORSE_INVALID_SEQUENCE) {
+                fprintf(stderr, "invalid morse sequence\n");
+                return_value = EXIT_FAILURE;
+                break;
+            }
+
+        // If reading from something other than a stream, like an actual telegraph key or signal,
+        // then you'd use timing to determing character boundaries.
+        } else if (input_char == ' ' || input_char == '\n') {
+            result = morse_get_value(parser, &value);
+
+            if (result == MORSE_INVALID_SEQUENCE) {
+                fprintf(stderr, "invalid morse sequence\n");
+                return_value =  EXIT_FAILURE;
+                break;
+            } else {
+                printf("%c", value);
+                morse_reset(parser);
+            }
+        } else {
+            fprintf(stderr, "invalid morse sequence\n");
+            return_value = EXIT_FAILURE;
+            break;
+        }
+    }
+
+    return return_value;
+}
+
+/*
+ * Demonstrates how to convert a morse string to text
+ */
+int morse_string_to_text(morse_parser *parser, char *input) {
+    morse_state result = MORSE_INVALID_SEQUENCE;
+
+    size_t buflen = 256;
+    char buf[buflen];
+    int written = 0;
+
+    int return_value = EXIT_SUCCESS;
+
+    while((result = morse_to_text(parser, input, strlen(input), buf, buflen, &written)) != MORSE_INVALID_SEQUENCE) {
+
+        if (result == MORSE_INVALID_SEQUENCE) {
+            fprintf(stderr, "invalid morse sequence\n");
+            return_value = EXIT_FAILURE;
+            break;
+
+        } else if (result == MORSE_CONTINUE) {
+            printf("%.*s", written, buf);
+
+        } else if (result == MORSE_DONE) {
+            printf("%.*s", written, buf);
+            return_value = EXIT_SUCCESS;
+            break;
+
+        } else {
+            fprintf(stderr, "unknown error\n");
+            return_value = EXIT_FAILURE;
+            break;
+        }
+    }
+
+    return return_value;
+}
+
+
+/*
+ * Demonstrates converting text to a morse string
+ */
+int text_to_morse(morse_parser *parser, char *input) {
+    size_t buflen = 10;
+    char buf[buflen];
+    int written = 0;
+
+    int return_value = EXIT_SUCCESS;
+
+    morse_state result = MORSE_INVALID_SEQUENCE;
+   
+    while((result = morse_from_text(parser, input, strlen(input), buf, buflen, &written)) != MORSE_INVALID_SEQUENCE) {
+        if (result == MORSE_INVALID_SEQUENCE) {
+            fprintf(stderr, "invalid text: %s\nOnly a-z A-Z 0-9 supported.\n", input);
+            return_value = EXIT_FAILURE;
+
+        } else if (result == MORSE_CONTINUE) {
+            printf("%.*s", written, buf);
+
+        } else if (result == MORSE_DONE) {
+            printf("%.*s", written, buf);
+            break;
+
+        } else {
+            fprintf(stderr, "unknown error\n");
+            return_value = EXIT_FAILURE;
+        }
+    }
+
+    return return_value;
+
+}
+
 int main(int argc, char **argv) {
 
     // Argument Parsing
@@ -48,114 +164,33 @@ int main(int argc, char **argv) {
     morse_parser parser;
     morse_reset(&parser);
 
-    size_t buflen = 256;
-    char buf[buflen];
-
-    int written = 0;
-    morse_state result;
-
     // String passed as argument
     if (input != NULL) {
         if (mode == TO_TEXT) {
-            while(true) {
-                result = morse_to_text(&parser, input, strlen(input), buf, buflen, &written);
+            return morse_string_to_text(&parser, input);
 
-                switch(result) {
-                    case MORSE_ERROR:
-                        fprintf(stderr, "unknown error\n");
-                        exit(EXIT_FAILURE);
-                    case MORSE_INVALID_SEQUENCE:
-                        fprintf(stderr, "invalid morse sequence: %s\n", input);
-                        exit(EXIT_FAILURE);
-                    case MORSE_CONTINUE:
-                        printf("%.*s", written, buf);
-                        break;
-                    case MORSE_DONE:
-                        printf("%.*s", written, buf);
-                        exit(EXIT_SUCCESS);
-                }
-            }
         } else {
-            while(true) {
-                result = morse_from_text(&parser, input, strlen(input), buf, buflen, &written);
-
-                switch(result) {
-                    case MORSE_ERROR:
-                        fprintf(stderr, "unknown error\n");
-                        exit(EXIT_FAILURE);
-                    case MORSE_INVALID_SEQUENCE:
-                        fprintf(stderr, "invalid text: %s\nOnly a-z A-Z 0-9 supported.\n", input);
-                        exit(EXIT_FAILURE);
-                    case MORSE_CONTINUE:
-                        printf("%.*s", written, buf);
-                        break;
-                    case MORSE_DONE:
-                        printf("%.*s", written, buf);
-                        exit(EXIT_SUCCESS);
-                }
-            }
+            return text_to_morse(&parser, input);
         }
 
     // Read from stdin
     } else {
-        char input_char = EOF;
+        if (mode == TO_TEXT) {
+            return stdin_morse_to_text(&parser);
 
-        while ((input_char = getc(stdin)) != EOF) {
-            if (mode == TO_TEXT) {
-                if (input_char == ' ' || input_char == '\n') {
-                    result = morse_get_value(&parser, buf);
-
-                    switch(result) {
-                        case MORSE_ERROR:
-                            fprintf(stderr, "unknown error\n");
-                            exit(EXIT_FAILURE);
-                        case MORSE_INVALID_SEQUENCE:
-                            fprintf(stderr, "invalid morse sequence\n");
-                            exit(EXIT_FAILURE);
-                        case MORSE_CONTINUE:
-                        case MORSE_DONE:
-                            printf("%c", buf[0]);
-                            morse_reset(&parser);
-                    }
-                } else if (input_char == '.' || input_char == '-') {
-                    result = morse_push_symbol(&parser, input_char == '.' ? MORSE_DIT : MORSE_DAH);
-
-                    switch(result) {
-                        case MORSE_ERROR:
-                            fprintf(stderr, "unknown error\n");
-                            exit(EXIT_FAILURE);
-                        case MORSE_INVALID_SEQUENCE:
-                            fprintf(stderr, "invalid morse sequence\n");
-                            exit(EXIT_FAILURE);
-                        case MORSE_CONTINUE:
-                            continue;
-                        case MORSE_DONE:
-                            printf("%c", buf[0]);
-                            morse_reset(&parser);
-                    }
-                } else {
-                    fprintf(stderr, "invalid morse sequence\n");
-                    exit(EXIT_FAILURE);
-                }
+        } else {
+            char temp[2] = {0, 0};
                 
-            } else { 
-                result = morse_from_text(&parser, &input_char, 1, buf, buflen, &written);
+            while ((temp[0] = getc(stdin)) != EOF) {
+                int result = text_to_morse(&parser, temp);
+                morse_reset(&parser);
 
-                switch(result) {
-                    case MORSE_ERROR:
-                        fprintf(stderr, "unknown error\n");
-                        exit(EXIT_FAILURE);
-                    case MORSE_INVALID_SEQUENCE:
-                        fprintf(stderr, "invalid text: %c\nOnly a-z A-Z 0-9 supported.\n", input_char);
-                        exit(EXIT_FAILURE);
-                    case MORSE_CONTINUE:
-                        printf("%.*s", written, buf);
-                        break;
-                    case MORSE_DONE:
-                        printf("%.*s", written, buf);
-                        morse_reset(&parser);
+                if (result == EXIT_FAILURE) {
+                    return result;
                 }
             }
         }
     }
+
+    return EXIT_SUCCESS;
 }
