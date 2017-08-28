@@ -18,7 +18,8 @@ libmorse is a small c library for working with morse code.
 
 ## Usage
 
-####Single Header
+#### Single Header
+
 The easiest way to use libmorse is to download the single-file header from the [latest release](https://github.com/memoryhole/libmorse/releases) and include it in your application.
 
 
@@ -56,13 +57,13 @@ Converts standard input or argument to morse or text
 
 ```
 
-######text to morse
+##### text to morse
 ```bash
 $ echo libmorse | morse -m
 .-.. .. -... -- --- .-. ... .
 ```
 
-######morse to text
+##### morse to text
 ```bash
 $ echo ".-.. .. -... -- --- .-. ... ." | ./morse -t
 LIBMORSE
